@@ -4,3 +4,5 @@ Computer acts as a host. Requires http server with PHP. For QR scan, computer mu
 Password is not encrypted, use at your own risk.
 
 Unable to see update? Check access right. In Linux, "chmod 777 scratch.json"
+
+Contains Bootstrap min and svg icons
