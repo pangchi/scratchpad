@@ -118,7 +118,7 @@ echo <<<HEREDOC
 	<tr>
 		<td>
 			<div class="form-control drag-area">
-				<div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
+				<span><IMG src="upload.svg" height="24"></span>
 				<header>Drag & Drop to Upload File</header>
 				<span>OR</span>
 				<button class="btn btn-secondary">Browse File</button>
