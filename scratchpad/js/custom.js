@@ -53,6 +53,7 @@ function tick() {
 }
 
 var fetchTimeStamp;
+var filecout = 0;
 
 function fetchContents() {
 	var xhr = new XMLHttpRequest();
@@ -71,21 +72,28 @@ function fetchContents() {
 			
 			let picturesNewHTML = "";
 			response.files.forEach((item) => {
-				picturesNewHTML = picturesNewHTML + `<IMG src='files/` + item + `' style='height:300px' />`; 
+				path = 'files/' + item;
+				picturesNewHTML = picturesNewHTML + `<a href="` + path + `" download="` + item + `"><img src="` + path + `" style="height:300px"></a>&nbsp;`; 
 			});
-			
-			if (document.getElementById("pictures").innerHTML == "" && response.files.length > 0) {
+
+			if (response.files.length > 0 && response.files.length != filecount) {
+
+				filecount = response.files.length;
+				
+				picturesNewHTML = "Click picture/file to download.<BR>" + picturesNewHTML;
+				
+				document.getElementById("pictures").innerHTML = picturesNewHTML;
 				startCountDownTimer();
 			}
-			
-			document.getElementById("pictures").innerHTML = picturesNewHTML;
 			
 			if (response.time != fetchTimeStamp && response.value != "") {
 				startCountDownTimer();
 				togglePassword(hide = true);
 			}
 			
-			if (response.value == "") {
+			if (response.value == "" && response.files.length == 0) {
+				filecount = 0;
+				document.getElementById("pictures").innerHTML = "";
 				document.getElementById("countdown").innerHTML = "";
 				togglePassword(hide = true);
 			}
