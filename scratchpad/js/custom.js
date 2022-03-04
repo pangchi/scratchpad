@@ -6,21 +6,24 @@ function send() {
 	startCountDownTimer();
 }
 
-function update(value, clear = false) {
-	var xhr = new XMLHttpRequest();
-	xhr.open("POST", 'save.php', true);
+async function update(value, clear = false) {
+	
+	var data = new FormData();
+	data.append('value', value);
+	data.append('clear', clear);
+	data.append('random', Math.random());
 
-	//Send the proper header information along with the request
-	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-	xhr.onreadystatechange = function() { // Call a function when the state changes.
-		if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-			// Request finished. Do processing here.
-			document.getElementById("debug").innerHTML = xhr.responseText;
+	await fetch('save.php', {
+		method:'POST',
+		body: data
+	}).then(function(r) {
+		if (r.status != 200) {
+			return;
 		}
-	}
-	xhr.send("value=" + encodeURIComponent(value) + "&clear=" + encodeURIComponent(clear) + "&random=" + Math.random());
-	// xhr.send(new Int8Array());
+		else return r.text().then(function(text) {
+			//document.getElementById("debug").innerHTML = text;
+		});
+	});
 }
 
 var timerId = null;
@@ -53,60 +56,49 @@ function tick() {
 }
 
 var fetchTimeStamp;
-var filecout = 0;
 
-function fetchContents() {
-	var xhr = new XMLHttpRequest();
-	xhr.open("POST", 'fetchContents.php', true);
-
-	//Send the proper header information along with the request
-	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-	xhr.onreadystatechange = function() { // Call a function when the state changes.
-		if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-			// Request finished. Do processing here.
-			var response = JSON.parse(xhr.responseText);
-			document.getElementById("scratchpad_text").value = response.value;
+async function fetchContents() {
+	var data = new FormData();
+	data.append('random', Math.random());
+	
+	await fetch('fetchContents.php', {
+		method:'POST',
+		body: data
+	}).then(function(r) {
+		if (r.status != 200) {
+			return;
+		}
+		else return r.text().then(function(text) {
+			var res = JSON.parse(text);
+			document.getElementById("scratchpad_text").value = res.value;
 			
-			//document.getElementById("debug").innerHTML = response.files.length;
+			//document.getElementById("debug").innerHTML = res.files.length;
 			
 			let picturesNewHTML = "";
-			response.files.forEach((item) => {
-				path = 'files/' + item;
-				picturesNewHTML = picturesNewHTML + `<a href="` + path + `" download="` + item + `"><img src="` + path + `" style="height:300px"></a>&nbsp;`; 
+			res.files.forEach((item) => {
+				picturesNewHTML = picturesNewHTML + `<IMG src='files/` + item + `' style='height:300px' />`; 
 			});
-
-			if (response.files.length > 0 && response.files.length != filecount) {
-
-				filecount = response.files.length;
-				
-				picturesNewHTML = "Click picture/file to download.<BR>" + picturesNewHTML;
-				
-				document.getElementById("pictures").innerHTML = picturesNewHTML;
+			
+			if (document.getElementById("pictures").innerHTML == "" && res.files.length > 0) {
 				startCountDownTimer();
 			}
 			
-			if (response.time != fetchTimeStamp && response.value != "") {
+			document.getElementById("pictures").innerHTML = picturesNewHTML;
+			
+			if (res.time != fetchTimeStamp && res.value != "") {
 				startCountDownTimer();
 				togglePassword(hide = true);
 			}
 			
-			if (response.value == "" && response.files.length == 0) {
-				filecount = 0;
-				document.getElementById("pictures").innerHTML = "";
+			if (res.value == "") {
 				document.getElementById("countdown").innerHTML = "";
 				togglePassword(hide = true);
 			}
 			
-			fetchTimeStamp = response.time;
-
-		}
-	}
+			fetchTimeStamp = res.time;
+		});
+	});
 	
-	contents = "random=" + Math.random();
-	xhr.send(contents);
-	// xhr.send(new Int8Array());
-	// xhr.send(document);
 }
 
 function copy() {
