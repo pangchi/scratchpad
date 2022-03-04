@@ -76,7 +76,7 @@ async function fetchContents() {
 			
 			let picturesNewHTML = "";
 			res.files.forEach((item) => {
-				picturesNewHTML = picturesNewHTML + `<IMG src='files/` + item + `' style='height:300px' />`; 
+				picturesNewHTML = picturesNewHTML + `<A HREF='files/` + item + `' download><IMG src='files/` + item + `' style='height:300px' /></A>`; 
 			});
 			
 			if (document.getElementById("pictures").innerHTML == "" && res.files.length > 0) {
