@@ -11,7 +11,11 @@ function printPath($host) {
 }
 
 $URI = printPath(gethostname());
-$URI_IP = printPath(getHostByName(getHostName()));
+$URI_IPs = [];
+foreach (getHostByNamel(getHostName()) as $hostip) {
+	$URI_IPs[] = printPath($hostip);
+}
+
 
 $SERVER_ADDR = $_SERVER['SERVER_ADDR'];
 
@@ -101,16 +105,23 @@ echo "<B>" . $URI . "</B>";
 
 <?php 
 if ($SERVER_ADDR == "127.0.0.1") {
-$encodedURI_IP = urlencode($URI_IP);
-echo <<<HEREDOC
-<P>
-<img 
-src="https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=$encodedURI_IP&choe=UTF-8" title="Link to this page" />
-</P>
+	echo <<<HEREDOC
+		<P id="pictures">
+		</P>
+	HEREDOC;
+	echo "<P id='qrcode'>";
+	
+	for ($i=0; $i < count($URI_IPs); $i++) {
+		$encodedURI_IP = urlencode($URI_IPs[$i]);
+		echo <<<HEREDOC
+		<img 
+		src="https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=$encodedURI_IP&choe=UTF-8" title="Link to this page" />
+		HEREDOC;
+	}
+	
+	echo "</P>";
+	
 
-<P id="pictures" style="relative; margin-left: 300px; margin-top: -300px;">
-</P>
-HEREDOC;
 }
 else {
 echo <<<HEREDOC
