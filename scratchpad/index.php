@@ -67,8 +67,11 @@ Scratchpad
 <P>
 ℹ️ Client must be in same network.<BR>
 <?php
-echo $pre_uri;
-echo "<B>" . $URI . "</B>";
+echo $pre_uri . "<BR>";
+echo "<B>" . $URI . "</B><BR>";
+foreach ($URI_IPs as $uri_ips) {
+	echo "<B>" . $uri_ips . "</B><BR>";
+}
 ?>
 </P>
 <div class="mb-3">
