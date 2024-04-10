@@ -67,7 +67,7 @@ Scratchpad
 <P>
 ℹ️ Client must be in same network.<BR>
 <?php
-echo $pre_uri . "<BR>";
+echo $pre_uri;
 echo "<B>" . $URI . "</B><BR>";
 foreach ($URI_IPs as $uri_ips) {
 	echo "<B>" . $uri_ips . "</B><BR>";
@@ -117,8 +117,9 @@ if ($SERVER_ADDR == "127.0.0.1") {
 	for ($i=0; $i < count($URI_IPs); $i++) {
 		$encodedURI_IP = urlencode($URI_IPs[$i]);
 		echo <<<HEREDOC
-		<img 
-		src="https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=$encodedURI_IP&choe=UTF-8" title="Link to this page" />
+		<!--<img 
+		src="https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=$encodedURI_IP&choe=UTF-8" title="Link to this page" />-->
+		<img src="https://qrcode.tec-it.com/API/QRCode?data=$encodedURI_IP&backcolor=%23ffffff&size=small&quietzone=4" title="Link to this page"/>
 		HEREDOC;
 	}
 	
